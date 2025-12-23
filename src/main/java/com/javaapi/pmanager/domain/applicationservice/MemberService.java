@@ -2,6 +2,7 @@ package com.javaapi.pmanager.domain.applicationservice;
 
 import com.javaapi.pmanager.domain.entity.Member;
 import com.javaapi.pmanager.domain.entity.Project;
+import com.javaapi.pmanager.domain.events.MemberCreatedEvent;
 import com.javaapi.pmanager.domain.exception.DuplicateMemberException;
 import com.javaapi.pmanager.domain.exception.DuplicateProjectException;
 import com.javaapi.pmanager.domain.exception.MemberNotFoundException;
@@ -22,6 +23,7 @@ import java.util.UUID;
 public class MemberService {
 
     private final MemberRepository memberRepository;
+    private final EventPublisher eventPublisher;
 
     public Member createMember(SaveMemberDataDTO saveMemberData) {
         if (existsMemberWithEmail(saveMemberData.getEmail(), null)) {
@@ -36,7 +38,15 @@ public class MemberService {
                 .build();
 
         memberRepository.save(member);
+
+        eventPublisher.publish(new MemberCreatedEvent(
+                member.getId(), // ou o ID do banco
+                member.getName(),
+                member.getEmail()
+        ));
+
         return member;
+
     }
 
     public Member loadMemberById (String memberId) {

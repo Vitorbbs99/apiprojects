@@ -2,6 +2,7 @@ package com.javaapi.pmanager.domain.applicationservice;
 
 import com.javaapi.pmanager.domain.entity.Member;
 import com.javaapi.pmanager.domain.entity.Project;
+import com.javaapi.pmanager.domain.events.ProjectCreatedEvent;
 import com.javaapi.pmanager.domain.exception.DuplicateProjectException;
 import com.javaapi.pmanager.domain.exception.InvalidProjectStatusExcpetion;
 import com.javaapi.pmanager.domain.exception.ProjectNotFoundException;
@@ -26,6 +27,7 @@ import java.util.stream.Collectors;
 public class ProjectService {
     private final ProjectRepository projectRepository;
     private final MemberService memberService;
+    private final ProjectPublisher projectPublisher;
 
     @Transactional
     public Project createProject(SaveProjectDataDTO saveProjectData) {
@@ -43,6 +45,12 @@ public class ProjectService {
 
         projectRepository.save(project);
         addMembersToProject(saveProjectData.getMemberIds(), project);
+
+        projectPublisher.publish(new ProjectCreatedEvent(
+             project.getId(),
+             project.getName(),
+                project.getDescription()
+        ));
 
         log.info("Projected created: " + project);
         return project;

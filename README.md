@@ -15,6 +15,7 @@ API desenvolvida em **Java com Spring Boot**, utilizando **arquitetura DDD (Doma
 - Maven
 - Hibernate
 - Lombok
+- RabbitMQ 3.13.7
 
 ---
 
