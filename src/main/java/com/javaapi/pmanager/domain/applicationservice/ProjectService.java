@@ -49,7 +49,9 @@ public class ProjectService {
         projectPublisher.publish(new ProjectCreatedEvent(
              project.getId(),
              project.getName(),
-                project.getDescription()
+                project.getDescription(),
+                project.getInitialDate(),
+                project.getFinalDate()
         ));
 
         log.info("Projected created: " + project);

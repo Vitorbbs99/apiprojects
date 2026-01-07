@@ -15,7 +15,7 @@ public class ProjectConsumer {
     public void onProjectCreated(ProjectCreatedEvent event) {
         // Simulamos o processamento do Log
         log.info(">>>> [LOG DO SISTEMA] Novo projeto registado com sucesso!");
-        log.info("ID: {} | Nome: {} | Email: {}", event.id(), event.name(), event.description());
+        log.info("ID: {} | Nome: {} | Email: {} | Data de criação: {} | Data final: {}", event.id(), event.name(), event.description(),event.initialDate(), event.finalDate());
         log.info("----------------------------------------------------------");
     }
 }
