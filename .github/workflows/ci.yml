@@ -33,6 +33,9 @@ jobs:
           distribution: 'temurin'
           cache: maven
 
+      - name: Prepare application.yml from example
+        run: cp src/main/resources/application-example.yml src/main/resources/application.yml
+
       - name: Build with Maven
         run: mvn -B clean package
         env:
