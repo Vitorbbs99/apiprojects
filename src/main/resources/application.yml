@@ -6,8 +6,8 @@ spring:
   mail:
     host: sandbox.smtp.mailtrap.io
     port: 2525
-    username: KEY_MAILTRAP
-    password: KEY_MAILTRAP
+    username: 943b4621d73ed0
+    password: 2771bc1d7f194f
     properties:
       mail:
         smtp:
@@ -22,7 +22,7 @@ spring:
     url: jdbc:mysql://localhost:3306/pmanagerdb
     driverClassName: com.mysql.cj.jdbc.Driver
     username: root
-    password: password
+    password: Vitor@1
   #h2:
     #console:
       #enabled: true
