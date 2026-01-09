@@ -4,7 +4,7 @@ API desenvolvida em **Java com Spring Boot**, utilizando **arquitetura DDD (Doma
 
 ---
 
-## Tecnologias utilizadas
+## Competências utilizadas
 
 - Java 21
 - Spring Boot
@@ -16,6 +16,9 @@ API desenvolvida em **Java com Spring Boot**, utilizando **arquitetura DDD (Doma
 - Hibernate
 - Lombok
 - RabbitMQ 3.13.7
+- MailTrap
+- CI/CD
+- Docker
 
 ---
 

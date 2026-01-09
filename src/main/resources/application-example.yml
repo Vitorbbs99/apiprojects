@@ -23,9 +23,9 @@ spring:
     driverClassName: com.mysql.cj.jdbc.Driver
     username: root
     password: password
-  #h2:
-    #console:
-      #enabled: true
+      #h2:
+      #console:
+    #enabled: true
   rabbitmq:
     host: localhost
     port: 5672
