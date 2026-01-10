@@ -1,5 +1,6 @@
 package com.javaapi.pmanager.domain.applicationservice;
 
+import com.javaapi.pmanager.domain.applicationservice.ports.ProjectPublisher;
 import com.javaapi.pmanager.domain.entity.Member;
 import com.javaapi.pmanager.domain.entity.Project;
 import com.javaapi.pmanager.domain.events.ProjectCreatedEvent;
@@ -7,7 +8,6 @@ import com.javaapi.pmanager.domain.exception.DuplicateProjectException;
 import com.javaapi.pmanager.domain.exception.InvalidProjectStatusExcpetion;
 import com.javaapi.pmanager.domain.exception.ProjectNotFoundException;
 import com.javaapi.pmanager.domain.model.ProjectStatus;
-import com.javaapi.pmanager.domain.repository.MemberRepository;
 import com.javaapi.pmanager.domain.repository.ProjectRepository;
 import com.javaapi.pmanager.infrastructure.dto.SaveProjectDataDTO;
 import jakarta.transaction.Transactional;

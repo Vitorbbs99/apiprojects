@@ -1,15 +1,12 @@
 package com.javaapi.pmanager.domain.applicationservice;
 
+import com.javaapi.pmanager.domain.applicationservice.ports.EventPublisher;
 import com.javaapi.pmanager.domain.entity.Member;
-import com.javaapi.pmanager.domain.entity.Project;
 import com.javaapi.pmanager.domain.events.MemberCreatedEvent;
 import com.javaapi.pmanager.domain.exception.DuplicateMemberException;
-import com.javaapi.pmanager.domain.exception.DuplicateProjectException;
 import com.javaapi.pmanager.domain.exception.MemberNotFoundException;
 import com.javaapi.pmanager.domain.repository.MemberRepository;
-import com.javaapi.pmanager.infrastructure.dto.MemberDTO;
 import com.javaapi.pmanager.infrastructure.dto.SaveMemberDataDTO;
-import com.javaapi.pmanager.infrastructure.dto.SaveProjectDataDTO;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;

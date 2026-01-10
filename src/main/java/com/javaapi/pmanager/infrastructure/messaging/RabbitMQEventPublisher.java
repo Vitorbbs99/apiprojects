@@ -1,6 +1,6 @@
 package com.javaapi.pmanager.infrastructure.messaging;
 
-import com.javaapi.pmanager.domain.applicationservice.EventPublisher;
+import com.javaapi.pmanager.domain.applicationservice.ports.EventPublisher;
 import com.javaapi.pmanager.domain.events.MemberCreatedEvent;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.stereotype.Component;

@@ -1,6 +1,6 @@
 package com.javaapi.pmanager.infrastructure.controller;
 
-import com.javaapi.pmanager.domain.applicationservice.MessagePublisher;
+import com.javaapi.pmanager.domain.applicationservice.ports.MessagePublisher;
 import com.javaapi.pmanager.domain.events.HelloWorldEvent;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
