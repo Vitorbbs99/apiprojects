@@ -22,12 +22,6 @@ API desenvolvida em **Java com Spring Boot**, utilizando **arquitetura DDD (Doma
 
 ---
 
-## Arquitetura do Projeto
-
-O projeto segue os princípios do **DDD (Domain Driven Design)**, separando responsabilidades por camadas.
-
----
-
 ## Banco de Dados
 
 - **MySQL**
