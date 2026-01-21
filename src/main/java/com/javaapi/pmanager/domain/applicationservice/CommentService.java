@@ -21,9 +21,13 @@ public class CommentService {
     @Transactional
     public Comment createComment(SaveCommentDataDTO saveCommentDataDTO) {
 
+        Task task = taskRepository.findById(saveCommentDataDTO.taskId())
+                .orElseThrow(() -> new RuntimeException("Task não encontrada"));
+
         Comment comment = Comment
                 .builder()
                 .text(saveCommentDataDTO.text())
+                .task(task)
                 .build();
 
         commentRepository.save(comment);

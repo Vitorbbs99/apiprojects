@@ -2,6 +2,8 @@ package com.javaapi.pmanager.infrastructure.dto;
 
 import com.javaapi.pmanager.domain.entity.Comment;
 
+import java.util.Optional;
+
 public record CommentDTO(String id, String text) {
     public static CommentDTO create(Comment comment) {
         return new CommentDTO(

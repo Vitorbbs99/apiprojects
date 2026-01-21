@@ -22,4 +22,8 @@ public class Comment {
     @Column(name = "text", nullable = false, length = 150)
     private String text;
 
+    @ManyToOne
+    @JoinColumn(name = "task_id")
+    private Task task;
+
 }
