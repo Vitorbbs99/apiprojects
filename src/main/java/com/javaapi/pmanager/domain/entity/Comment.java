@@ -26,4 +26,8 @@ public class Comment {
     @JoinColumn(name = "task_id")
     private Task task;
 
+    @ManyToOne
+    @JoinColumn(name = "assigned_member")
+    private Member assignedMember;
+
 }

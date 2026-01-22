@@ -1,8 +1,10 @@
 package com.javaapi.pmanager.domain.applicationservice;
 
 import com.javaapi.pmanager.domain.entity.Comment;
+import com.javaapi.pmanager.domain.entity.Member;
 import com.javaapi.pmanager.domain.entity.Task;
 import com.javaapi.pmanager.domain.repository.CommentRepository;
+import com.javaapi.pmanager.domain.repository.MemberRepository;
 import com.javaapi.pmanager.domain.repository.TaskRepository;
 import com.javaapi.pmanager.infrastructure.dto.SaveCommentDataDTO;
 import jakarta.transaction.Transactional;
@@ -15,8 +17,8 @@ import org.springframework.stereotype.Service;
 @Slf4j
 public class CommentService {
     private final CommentRepository commentRepository;
-    private final TaskService taskService;
     private final TaskRepository taskRepository;
+    private final MemberRepository memberRepository;
 
     @Transactional
     public Comment createComment(SaveCommentDataDTO saveCommentDataDTO) {
@@ -24,10 +26,14 @@ public class CommentService {
         Task task = taskRepository.findById(saveCommentDataDTO.taskId())
                 .orElseThrow(() -> new RuntimeException("Task não encontrada"));
 
+        Member member = memberRepository.findById(saveCommentDataDTO.memberId())
+                .orElseThrow(() -> new RuntimeException("Membro não encontrado"));
+
         Comment comment = Comment
                 .builder()
                 .text(saveCommentDataDTO.text())
                 .task(task)
+                .assignedMember(member)
                 .build();
 
         commentRepository.save(comment);
