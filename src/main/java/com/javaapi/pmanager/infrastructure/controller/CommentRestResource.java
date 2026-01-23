@@ -2,15 +2,15 @@ package com.javaapi.pmanager.infrastructure.controller;
 
 import com.javaapi.pmanager.domain.applicationservice.CommentService;
 import com.javaapi.pmanager.domain.entity.Comment;
+import com.javaapi.pmanager.domain.entity.Task;
 import com.javaapi.pmanager.infrastructure.dto.CommentDTO;
 import com.javaapi.pmanager.infrastructure.dto.SaveCommentDataDTO;
+import com.javaapi.pmanager.infrastructure.dto.SaveTaskDataDTO;
+import com.javaapi.pmanager.infrastructure.dto.TaskDTO;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.net.URI;
 
@@ -31,4 +31,21 @@ public class CommentRestResource {
                 .created(URI.create(PATH_COMMENT + "/" + comment.getId()))
                 .body(CommentDTO.create(comment));
     }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<CommentDTO> updateComment(
+            @PathVariable("id") String commentId,
+            @RequestBody @Valid SaveCommentDataDTO saveCommentDataDTO
+    ) {
+        Comment comment = commentService.updateComment(commentId, saveCommentDataDTO);
+        return ResponseEntity.ok(CommentDTO.create(comment));
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deleteComment(@PathVariable("id") String commentId) {
+        commentService.deleteComment(commentId);
+        return ResponseEntity.noContent().build();
+    }
+
+
 }
