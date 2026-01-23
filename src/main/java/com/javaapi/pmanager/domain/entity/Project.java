@@ -31,9 +31,10 @@ public class Project {
 
     @Column(name = "description", nullable = false, length = 150)
     private String description;
-    @Column(name = "initial_date", nullable = false)
 
+    @Column(name = "initial_date", nullable = false)
     private LocalDate initialDate;
+
     @Column(name = "final_date", nullable = false)
     private LocalDate finalDate;
 
