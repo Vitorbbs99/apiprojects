@@ -43,7 +43,4 @@ spring:
 app:
   general:
     pageSize: 3
-  security:
-    masterApiKey: thekey
-    expirationDays: 2
 
