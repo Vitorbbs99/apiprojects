@@ -21,23 +21,22 @@ public class SecurityConfigurations {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         return http
-                .csrf(csrf -> csrf.disable()) // Desativado para facilitar os testes no Postman
-                .authorizeHttpRequests(req -> {
-                    req.requestMatchers(HttpMethod.POST, "/register").permitAll(); // Registro aberto
-                    req.requestMatchers(HttpMethod.POST, "/login").permitAll();
-                    req.anyRequest().authenticated(); // Todo o resto travado
-                })
+                .csrf(csrf -> csrf.disable())
                 .sessionManagement(sm -> sm.sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED))
+                .authorizeHttpRequests(req -> {
+                    req.requestMatchers(HttpMethod.POST, "/login").permitAll();
+                    req.requestMatchers(HttpMethod.POST, "/register").permitAll();
+                    req.anyRequest().authenticated();
+                })
                 .logout(logout -> logout
-                        .logoutUrl("/logout") // Define a URL de logout
-                        .invalidateHttpSession(true) // Destrói a sessão no servidor
-                        .clearAuthentication(true) // Limpa o usuário do contexto do Spring
-                        .deleteCookies("JSESSIONID") // Deleta o cookie
+                        .logoutUrl("/logout") // URL que o Postman vai chamar (POST)
+                        .invalidateHttpSession(true) // Mata a sessão no servidor
+                        .clearAuthentication(true) // Limpa o usuário logado
+                        .deleteCookies("JSESSIONID") // Remove o cookie do navegador
                         .logoutSuccessHandler((request, response, authentication) -> {
-                            response.setStatus(HttpServletResponse.SC_OK);
+                            response.setStatus(HttpServletResponse.SC_OK); // Retorna 200 OK
                         })
                 )
-                .httpBasic(Customizer.withDefaults()) // Permite login enviando e-mail e senha no Header do Postman (Auth -> Basic Auth)
                 .build();
     }
 
