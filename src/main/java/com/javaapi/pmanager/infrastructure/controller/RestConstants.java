@@ -10,6 +10,10 @@ public final class RestConstants {
 
     public static final String PATH_COMMENT = "/comment";
 
+    public static final String PATH_REGISTER_USER = "/register";
+
+    public static final String PATH_LOGIN = "/login";
+
     public static final String PATH_API_KEYS = "/apiKeys";
 
     private RestConstants(){}
