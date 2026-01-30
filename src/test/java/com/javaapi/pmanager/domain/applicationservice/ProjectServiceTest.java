@@ -29,7 +29,7 @@ class ProjectServiceTest {
     @Test
     void testLoadProject() {
 
-        String id = "111";
+        String id = "3dbbss4446644-44-4555vbb";
         Project projectFake = new Project();
         projectFake.setId(id);
 
