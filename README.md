@@ -1,6 +1,8 @@
 # API Spring Boot – Arquitetura DDD
 
-API desenvolvida em **Java com Spring Boot**, utilizando **arquitetura DDD (Domain Driven Design)**, com persistência de dados em **MySQL (JPA/Hibernate)** e **MongoDB** para dados auxiliares e monitoramento.
+O projeto foi desenvolvido em **Java com Spring Boot**, utilizando **arquitetura DDD (Domain Driven Design)**, com persistência de dados em **MySQL (JPA/Hibernate)** e **MongoDB** para dados auxiliares e monitoramento.
+
+Esta API é uma solução de gestão estilo Kanban focada em organizar projetos e simplificar as tarefas. Ela centraliza o fluxo de trabalho e aprimora a colaboração da equipe, eliminando gargalos para aumentar a produtividade.
 
 ---
 
@@ -19,6 +21,8 @@ API desenvolvida em **Java com Spring Boot**, utilizando **arquitetura DDD (Doma
 - MailTrap
 - CI/CD
 - Docker
+- JUnit
+- Mockito
 
 ---
 
