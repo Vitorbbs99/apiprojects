@@ -44,11 +44,11 @@ public class Project {
 
     @ManyToMany
     @JoinTable(
-            name = "project_member",
+            name = "project_user",
             joinColumns = @JoinColumn(name = "project_id"),
-            inverseJoinColumns = @JoinColumn(name = "member_id")
+            inverseJoinColumns = @JoinColumn(name = "user_id")
     )
-    private List<Member> members;
+    private List<User> users;
 
     @OneToMany(mappedBy = "project", orphanRemoval = true)
     private List<Task> task;

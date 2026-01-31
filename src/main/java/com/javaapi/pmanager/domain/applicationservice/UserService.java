@@ -1,6 +1,9 @@
 package com.javaapi.pmanager.domain.applicationservice;
 
+import com.javaapi.pmanager.domain.entity.Member;
 import com.javaapi.pmanager.domain.entity.User;
+import com.javaapi.pmanager.domain.exception.MemberNotFoundException;
+import com.javaapi.pmanager.domain.exception.UserNotFoundException;
 import com.javaapi.pmanager.domain.repository.UserRepository;
 import com.javaapi.pmanager.infrastructure.dto.SaveUserDataDTO;
 import lombok.RequiredArgsConstructor;
@@ -25,10 +28,17 @@ public class UserService {
         User user = User
                 .builder()
                 .email(saveUserDataDTO.email())
+                .name(saveUserDataDTO.name())
                 .password(encryptedPassword)
                 .build();
 
         userRepository.save(user);
         return user;
+    }
+
+    public User loadUserById(String userId) {
+        return userRepository
+                .findById(userId)
+                .orElseThrow(() -> new UserNotFoundException(userId));
     }
 }

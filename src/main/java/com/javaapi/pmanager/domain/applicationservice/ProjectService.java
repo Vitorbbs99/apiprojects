@@ -1,8 +1,8 @@
 package com.javaapi.pmanager.domain.applicationservice;
 
 import com.javaapi.pmanager.domain.applicationservice.ports.ProjectPublisher;
-import com.javaapi.pmanager.domain.entity.Member;
 import com.javaapi.pmanager.domain.entity.Project;
+import com.javaapi.pmanager.domain.entity.User;
 import com.javaapi.pmanager.domain.events.ProjectCreatedEvent;
 import com.javaapi.pmanager.domain.exception.DuplicateProjectException;
 import com.javaapi.pmanager.domain.exception.InvalidProjectStatusExcpetion;
@@ -26,7 +26,7 @@ import java.util.stream.Collectors;
 @Slf4j
 public class ProjectService {
     private final ProjectRepository projectRepository;
-    private final MemberService memberService;
+    private final UserService userService;
     private final ProjectPublisher projectPublisher;
 
     @Transactional
@@ -44,7 +44,7 @@ public class ProjectService {
                 .build();
 
         projectRepository.save(project);
-        addMembersToProject(saveProjectData.getMemberIds(), project);
+        addUsersToProject(saveProjectData.getUsersIds(), project);
 
         projectPublisher.publish(new ProjectCreatedEvent(
              project.getId(),
@@ -83,7 +83,7 @@ public class ProjectService {
         project.setFinalDate(saveProjectData.getFinalDate());
         project.setStatus(convertToProjectStatus(saveProjectData.getStatus()));
 
-        addMembersToProject(saveProjectData.getMemberIds(), project);
+        addUsersToProject(saveProjectData.getUsersIds(), project);
 
         return project;
     }
@@ -103,14 +103,14 @@ public class ProjectService {
                 .isPresent();
     }
 
-    private void addMembersToProject(Set<String> memberIds, Project project) {
-        List<Member> members = Optional
-                .ofNullable(memberIds)
+    private void addUsersToProject(Set<String> userIds, Project project) {
+        List<User> users = Optional
+                .ofNullable(userIds)
                 .orElse(Set.of())
                 .stream()
-                .map(id -> memberService.loadMemberById(id))
+                .map(id -> userService.loadUserById(id))
                 .collect(Collectors.toList());
 
-        project.setMembers(members);
+        project.setUsers(users);
     }
 }

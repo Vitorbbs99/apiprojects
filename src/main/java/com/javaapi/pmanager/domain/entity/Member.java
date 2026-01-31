@@ -32,7 +32,4 @@ public class Member {
 
     @Column(name = "deleted", nullable = false)
     private Boolean deleted;
-
-    @ManyToMany(mappedBy = "members")
-    private List<Project> projects;
 }

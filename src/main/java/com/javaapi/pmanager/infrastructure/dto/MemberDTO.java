@@ -17,20 +17,13 @@ public class MemberDTO {
     private final String secret;
     private final String name;
     private final String email;
-    private final Set<String> projectsIds;
 
     public static MemberDTO create(Member member) {
         return new MemberDTO(
             member.getId(),
                 member.getSecret(),
                 member.getName(),
-                member.getEmail(),
-                Optional
-                        .ofNullable(member.getProjects())
-                        .orElse(List.of())
-                        .stream()
-                        .map(Project::getId)
-                        .collect(toSet())
+                member.getEmail()
         );
     }
 }

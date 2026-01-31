@@ -1,7 +1,7 @@
 package com.javaapi.pmanager.infrastructure.dto;
 
-import com.javaapi.pmanager.domain.entity.Member;
 import com.javaapi.pmanager.domain.entity.Project;
+import com.javaapi.pmanager.domain.entity.User;
 import com.javaapi.pmanager.domain.model.ProjectStatus;
 import lombok.Data;
 
@@ -20,7 +20,7 @@ public class ProjectDTO {
     private final LocalDate initialDate;
     private final LocalDate finalDate;
     private final ProjectStatus status;
-    private final Set<String> memberIds;
+    private final Set<String> usersIds;
 
     public static ProjectDTO create(Project project) {
         return new ProjectDTO(
@@ -31,10 +31,10 @@ public class ProjectDTO {
                 project.getFinalDate(),
                 project.getStatus(),
                 Optional
-                        .ofNullable(project.getMembers())
+                        .ofNullable(project.getUsers())
                         .orElse(List.of())
                         .stream()
-                        .map(Member::getId)
+                        .map(User::getId)
                         .collect(toSet())
         );
     }

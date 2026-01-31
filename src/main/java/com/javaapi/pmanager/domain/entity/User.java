@@ -10,6 +10,7 @@ import java.util.Collection;
 import java.util.List;
 
 @Entity
+@Setter
 @Getter
 @Builder
 @NoArgsConstructor
@@ -22,11 +23,17 @@ public class User implements UserDetails {
     @Column(name = "id", nullable = false, length = 36)
     private String id;
 
+    @Column(name = "name", nullable = false, length = 80)
+    private String name;
+
     @Column(name = "email", nullable = false, length = 80)
     private String email;
 
     @Column(name = "password", nullable = false)
     private String password;
+
+    @ManyToMany(mappedBy = "users")
+    private List<Project> projects;
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {

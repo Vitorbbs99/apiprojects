@@ -26,7 +26,7 @@ public class SaveProjectDataDTO {
     private final LocalDate finalDate;
     private final String status;
 
-    private final Set<String> memberIds;
+    private final Set<String> usersIds;
 
     @AssertTrue(message = "Dates are not consistent")
     @SuppressWarnings("unused")
