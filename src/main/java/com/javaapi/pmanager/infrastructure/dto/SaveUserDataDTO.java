@@ -11,5 +11,6 @@ public record SaveUserDataDTO(
         @NotNull(message = "Name cannot be empty")
         @Size(min = 1, max = 80, message = "Invalid user name")
         String name,
+        String role,
         String password
 ) {}

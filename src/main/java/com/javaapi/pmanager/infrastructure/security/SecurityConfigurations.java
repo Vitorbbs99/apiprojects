@@ -25,7 +25,7 @@ public class SecurityConfigurations {
                 .sessionManagement(sm -> sm.sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED))
                 .authorizeHttpRequests(req -> {
                     req.requestMatchers(HttpMethod.POST, "/login").permitAll();
-                    req.requestMatchers(HttpMethod.POST, "/register").permitAll();
+                    req.requestMatchers(HttpMethod.POST, "/register/**").permitAll();
                     req.anyRequest().authenticated();
                 })
                 .logout(logout -> logout

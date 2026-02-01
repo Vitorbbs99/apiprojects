@@ -2,15 +2,15 @@ package com.javaapi.pmanager.infrastructure.controller;
 
 import com.javaapi.pmanager.domain.applicationservice.UserService;
 import com.javaapi.pmanager.domain.entity.User;
+import com.javaapi.pmanager.infrastructure.dto.ProjectDTO;
 import com.javaapi.pmanager.infrastructure.dto.SaveUserDataDTO;
 import com.javaapi.pmanager.infrastructure.dto.UserDTO;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.repository.query.Param;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 
 import java.net.URI;
 
@@ -30,5 +30,14 @@ public class UserRegisterRestResource {
         return ResponseEntity
                 .created(URI.create(PATH_REGISTER_USER + "/" + user.getId()))
                 .body(UserDTO.create(user));
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<UserDTO> updateUser(
+            @PathVariable("id") String UserId,
+            @RequestBody @Valid SaveUserDataDTO saveUserDataDTO
+    ) {
+        User user = userService.updateUser(UserId, saveUserDataDTO);
+        return ResponseEntity.ok(UserDTO.create(user));
     }
 }

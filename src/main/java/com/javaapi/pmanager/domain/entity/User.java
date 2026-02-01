@@ -1,5 +1,6 @@
 package com.javaapi.pmanager.domain.entity;
 
+import com.javaapi.pmanager.domain.model.UserRole;
 import jakarta.persistence.*;
 import lombok.*;
 import org.springframework.security.core.GrantedAuthority;
@@ -31,6 +32,10 @@ public class User implements UserDetails {
 
     @Column(name = "password", nullable = false)
     private String password;
+
+    @Column(name = "roles", nullable = false)
+    @Enumerated(EnumType.STRING)
+    private UserRole roles;
 
     @ManyToMany(mappedBy = "users")
     private List<Project> projects;
