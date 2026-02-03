@@ -1,19 +1,28 @@
 package com.javaapi.pmanager.infrastructure.controller;
 
+import com.javaapi.pmanager.domain.applicationservice.FileService;
 import com.javaapi.pmanager.domain.applicationservice.TaskService;
 import com.javaapi.pmanager.domain.entity.Member;
 import com.javaapi.pmanager.domain.entity.Task;
+import com.javaapi.pmanager.infrastructure.dto.FileResponseDTO;
 import com.javaapi.pmanager.infrastructure.dto.MemberDTO;
 import com.javaapi.pmanager.infrastructure.dto.TaskDTO;
 import com.javaapi.pmanager.infrastructure.dto.SaveTaskDataDTO;
 import com.javaapi.pmanager.infrastructure.util.SortProperties;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.Resource;
 import org.springframework.data.domain.Page;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.net.URI;
 import java.util.List;
 import java.util.Optional;
@@ -84,5 +93,40 @@ public class TaskRestResource {
                );
 
        return ResponseEntity.ok(tasks.stream().map(TaskDTO::create).toList());
+    }
+
+    @Autowired
+    private FileService fileService;
+
+    @PostMapping("/upload")
+    public ResponseEntity<FileResponseDTO> uploadFile(@RequestParam("file") MultipartFile file) {
+        String fileName = fileService.storeFile(file);
+
+        return ResponseEntity.ok(new FileResponseDTO(
+                fileName,
+                file.getContentType(),
+                file.getSize()
+        ));
+    }
+
+    @GetMapping("/download/{fileName:.+}")
+    public ResponseEntity<Resource> downloadFile(@PathVariable String fileName, HttpServletRequest request) {
+        // Carrega o arquivo como um Resource
+        Resource resource = fileService.loadFileAsResource(fileName);
+
+        // Tenta determinar o tipo do arquivo (content type)
+        String contentType = null;
+        try {
+            contentType = request.getServletContext().getMimeType(resource.getFile().getAbsolutePath());
+        } catch (IOException ex) {
+            contentType = "application/octet-stream"; // Tipo padrão se não descobrir
+        }
+
+        return ResponseEntity.ok()
+                .contentType(MediaType.parseMediaType(contentType))
+                // Se quiser que o navegador baixe direto, use "attachment; filename=..."
+                // Se quiser que apenas abra (imagens/PDF), use "inline; filename=..."
+                .header(HttpHeaders.CONTENT_DISPOSITION, "inline; filename=\"" + resource.getFilename() + "\"")
+                .body(resource);
     }
 }
