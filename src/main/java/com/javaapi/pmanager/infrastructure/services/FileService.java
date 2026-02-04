@@ -1,4 +1,4 @@
-package com.javaapi.pmanager.domain.applicationservice;
+package com.javaapi.pmanager.infrastructure.services;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.Resource;

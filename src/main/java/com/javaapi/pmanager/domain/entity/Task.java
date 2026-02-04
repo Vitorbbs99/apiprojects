@@ -23,9 +23,11 @@ public class Task {
     @Column(name = "title", nullable = false, length = 80)
     private String title;
 
-
     @Column(name = "description", nullable = false, length = 180)
     private String description;
+
+    @Column(name = "file", nullable = false)
+    private String file;
 
     @Column(name = "number_of_days", nullable = false)
     private Integer numberOfDays;

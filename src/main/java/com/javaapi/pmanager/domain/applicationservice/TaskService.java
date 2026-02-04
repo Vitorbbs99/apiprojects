@@ -10,14 +10,16 @@ import com.javaapi.pmanager.domain.model.TaskStatus;
 import com.javaapi.pmanager.domain.repository.TaskRepository;
 import com.javaapi.pmanager.infrastructure.config.AppConfigProperties;
 import com.javaapi.pmanager.infrastructure.dto.SaveTaskDataDTO;
+import com.javaapi.pmanager.infrastructure.services.FileService;
 import com.javaapi.pmanager.infrastructure.util.PaginationHelper;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 import java.util.Objects;
@@ -31,6 +33,9 @@ public class TaskService {
     private final ProjectService projectService;
     private final MemberService memberService;
     private final AppConfigProperties props;
+
+    @Autowired
+    private FileService fileService;
 
     @Transactional
     public Task createTask(SaveTaskDataDTO saveTaskData) {
@@ -88,6 +93,16 @@ public class TaskService {
         task.setAssignedMember(member);
 
         return task;
+    }
+
+    @Transactional
+    public String updateTaskFile(String taskId, MultipartFile file) {
+        Task task = loadTask(taskId);
+        String fileName = fileService.storeFile(file);
+
+        task.setFile(fileName);
+
+        return fileName;
     }
 
     public Page<Task> findTasks (
