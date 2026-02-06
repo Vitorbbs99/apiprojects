@@ -26,7 +26,8 @@ public class SecurityConfigurations {
                 .authorizeHttpRequests(req -> {
                     req.requestMatchers(HttpMethod.POST, "/login").permitAll();
                     req.requestMatchers(HttpMethod.POST, "/register/**").permitAll();
-                    req.requestMatchers(HttpMethod.GET, "/tasks/download/**").permitAll();
+                    req.requestMatchers(HttpMethod.GET, "/projects/**").permitAll();
+                    req.requestMatchers(HttpMethod.GET, "/tasks/**").permitAll();
                     req.anyRequest().authenticated();
                 })
                 .logout(logout -> logout

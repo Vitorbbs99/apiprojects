@@ -11,24 +11,26 @@ import com.javaapi.pmanager.domain.exception.ProjectNotFoundException;
 import com.javaapi.pmanager.domain.model.ProjectStatus;
 import com.javaapi.pmanager.domain.model.UserRole;
 import com.javaapi.pmanager.domain.repository.ProjectRepository;
+import com.javaapi.pmanager.infrastructure.dto.ProjectStatsDTO;
 import com.javaapi.pmanager.infrastructure.dto.SaveProjectDataDTO;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 
 import java.awt.*;
+import java.util.*;
 import java.util.List;
-import java.util.Objects;
-import java.util.Optional;
-import java.util.Set;
 import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
 @Slf4j
 public class ProjectService {
+    private static final Logger log = LoggerFactory.getLogger(ProjectService.class);
     private final ProjectRepository projectRepository;
     private final UserService userService;
     private final ProjectPublisher projectPublisher;
@@ -125,5 +127,10 @@ public class ProjectService {
                 .collect(Collectors.toList());
 
         project.setUsers(users);
+    }
+
+    public ProjectStatsDTO projectStats(String projectId) {
+        var stats = projectRepository.findDetailedStats(projectId);
+        return new ProjectStatsDTO(stats.getTotalTasks(), stats.getPendingTasks());
     }
 }

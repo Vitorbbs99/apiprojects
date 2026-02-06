@@ -4,6 +4,7 @@ import com.javaapi.pmanager.domain.applicationservice.ProjectService;
 import com.javaapi.pmanager.domain.entity.Project;
 import com.javaapi.pmanager.domain.entity.User;
 import com.javaapi.pmanager.infrastructure.dto.ProjectDTO;
+import com.javaapi.pmanager.infrastructure.dto.ProjectStatsDTO;
 import com.javaapi.pmanager.infrastructure.dto.SaveProjectDataDTO;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -59,5 +60,10 @@ public class ProjectRestResource {
     ) {
         Project project = projectService.updateProject(projectId, saveProjectDataDTO, currentUser);
         return ResponseEntity.ok(ProjectDTO.create(project));
+    }
+
+    @GetMapping("/{id}/stats")
+    public ResponseEntity<ProjectStatsDTO> projectStats(@PathVariable("id") String projectId) {
+        return ResponseEntity.ok(projectService.projectStats(projectId));
     }
 }
