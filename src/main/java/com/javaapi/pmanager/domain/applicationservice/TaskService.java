@@ -3,6 +3,7 @@ package com.javaapi.pmanager.domain.applicationservice;
 import com.javaapi.pmanager.domain.entity.Member;
 import com.javaapi.pmanager.domain.entity.Project;
 import com.javaapi.pmanager.domain.entity.Task;
+import com.javaapi.pmanager.domain.entity.User;
 import com.javaapi.pmanager.domain.exception.DuplicateTaskException;
 import com.javaapi.pmanager.domain.exception.InvalidTaskStatusExcpetion;
 import com.javaapi.pmanager.domain.exception.TaskNotFoundException;
@@ -25,13 +26,14 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 
+
 @Service
 @RequiredArgsConstructor
 @Slf4j
 public class TaskService {
     private final TaskRepository taskRepository;
     private final ProjectService projectService;
-    private final MemberService memberService;
+    private final UserService userService;
     private final AppConfigProperties props;
 
     @Autowired
@@ -41,7 +43,7 @@ public class TaskService {
     public Task createTask(SaveTaskDataDTO saveTaskData) {
 
         Project project = getProjectIfPossible(saveTaskData.getProjectId());
-        Member member = getMemberIfPossible(saveTaskData.getMemberId());
+        User user = getMemberIfPossible(saveTaskData.getUserId());
 
         if (existisTaskWithName(saveTaskData.getTitle(), null)) {
             throw new DuplicateTaskException(saveTaskData.getTitle());
@@ -53,7 +55,7 @@ public class TaskService {
                 .numberOfDays(saveTaskData.getNumberOfDays())
                 .status(TaskStatus.PENDING)
                 .project(project)
-                .assignedMember(member)
+                .assignedUser(user)
                 .build();
 
         taskRepository.save(task);
@@ -78,7 +80,7 @@ public class TaskService {
     public Task updateTask(String taskId, SaveTaskDataDTO saveTaskData) {
 
         Project project = getProjectIfPossible(saveTaskData.getProjectId());
-        Member member = getMemberIfPossible(saveTaskData.getMemberId());
+        User user = getMemberIfPossible(saveTaskData.getUserId());
 
         if (existisTaskWithName(saveTaskData.getTitle(), taskId)) {
             throw new DuplicateTaskException(saveTaskData.getTitle());
@@ -90,7 +92,7 @@ public class TaskService {
         task.setNumberOfDays(saveTaskData.getNumberOfDays());
         task.setStatus(convertToTaskStatus(saveTaskData.getStatus()));
         task.setProject(project);
-        task.setAssignedMember(member);
+        task.setAssignedUser(user);
 
         return task;
     }
@@ -149,12 +151,12 @@ public class TaskService {
     }*/
 
 
-    private Member getMemberIfPossible(String memberId) {
-        Member member = null;
+    private User getMemberIfPossible(String memberId) {
+        User user = null;
         if (!Objects.isNull(memberId)) {
-            member = memberService.loadMemberById(memberId);
+            user = userService.loadUserById(memberId);
         }
-        return member;
+        return user;
     }
 
     private Project getProjectIfPossible(String projectId) {

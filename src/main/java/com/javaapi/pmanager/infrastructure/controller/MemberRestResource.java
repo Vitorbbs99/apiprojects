@@ -1,3 +1,15 @@
+// O MEMBER NÃO É MAIS ÚTIL (UTILIZAR A USER)
+// O MEMBER NÃO É MAIS ÚTIL (UTILIZAR A USER)
+// O MEMBER NÃO É MAIS ÚTIL (UTILIZAR A USER)
+// O MEMBER NÃO É MAIS ÚTIL (UTILIZAR A USER)
+// O MEMBER NÃO É MAIS ÚTIL (UTILIZAR A USER)
+// O MEMBER NÃO É MAIS ÚTIL (UTILIZAR A USER)
+// O MEMBER NÃO É MAIS ÚTIL (UTILIZAR A USER)
+// O MEMBER NÃO É MAIS ÚTIL (UTILIZAR A USER)
+// O MEMBER NÃO É MAIS ÚTIL (UTILIZAR A USER)
+// O MEMBER NÃO É MAIS ÚTIL (UTILIZAR A USER)
+// O MEMBER NÃO É MAIS ÚTIL (UTILIZAR A USER)
+
 package com.javaapi.pmanager.infrastructure.controller;
 
 import com.javaapi.pmanager.domain.applicationservice.MemberService;

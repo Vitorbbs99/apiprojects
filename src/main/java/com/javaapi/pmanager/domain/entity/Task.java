@@ -26,7 +26,7 @@ public class Task {
     @Column(name = "description", nullable = false, length = 180)
     private String description;
 
-    @Column(name = "file", nullable = false)
+    @Column(name = "file", nullable = true)
     private String file;
 
     @Column(name = "number_of_days", nullable = false)
@@ -41,6 +41,6 @@ public class Task {
     private Project project;
 
     @ManyToOne
-    @JoinColumn(name = "assigned_member")
-    private Member assignedMember;
+    @JoinColumn(name = "assigned_user")
+    private User assignedUser;
 }

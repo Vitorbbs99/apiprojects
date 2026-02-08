@@ -15,7 +15,7 @@ public class TaskDTO {
     private final Integer numberOfDays;
     private final TaskStatus status;
     private final ProjectDTO project;
-    private final MemberDTO assignedMember;
+    private final UserDTO assignedMember;
 
     public static TaskDTO create(Task task) {
         return new TaskDTO(
@@ -25,7 +25,7 @@ public class TaskDTO {
                 task.getNumberOfDays(),
                 task.getStatus(),
                 Optional.ofNullable(task.getProject()).map(ProjectDTO::create).orElse(null),
-                Optional.ofNullable(task.getAssignedMember()).map(MemberDTO::create).orElse(null)
+                Optional.ofNullable(task.getAssignedUser()).map(UserDTO::create).orElse(null)
         );
     }
 }

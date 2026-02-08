@@ -24,11 +24,12 @@ public class SecurityConfigurations {
                 .csrf(csrf -> csrf.disable())
                 .sessionManagement(sm -> sm.sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED))
                 .authorizeHttpRequests(req -> {
-                    req.requestMatchers(HttpMethod.POST, "/login").permitAll();
+                   /* req.requestMatchers(HttpMethod.POST, "/login").permitAll();
                     req.requestMatchers(HttpMethod.POST, "/register/**").permitAll();
                     req.requestMatchers(HttpMethod.GET, "/projects/**").permitAll();
                     req.requestMatchers(HttpMethod.GET, "/tasks/**").permitAll();
-                    req.anyRequest().authenticated();
+                    req.anyRequest().authenticated();*/
+                    req.anyRequest().permitAll();
                 })
                 .logout(logout -> logout
                         .logoutUrl("/logout") // URL que o Postman vai chamar (POST)
