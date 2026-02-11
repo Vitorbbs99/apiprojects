@@ -18,11 +18,38 @@ services:
     container_name: pmanager-rabbit
     restart: always
     ports:
-      - "5672:5672"   # Porta do protocolo AMQP
-      - "15672:15672" # Porta do Painel de Controle
+      - "5672:5672"
+      - "15672:15672"
     environment:
       RABBITMQ_DEFAULT_USER: guest
       RABBITMQ_DEFAULT_PASS: guest
+
+  kafka:
+    image: confluentinc/cp-kafka:7.5.0
+    container_name: pmanager-kafka
+    ports:
+      - "9092:9092"
+    environment:
+      KAFKA_NODE_ID: 1
+      KAFKA_PROCESS_ROLES: 'broker,controller'
+      KAFKA_CONTROLLER_QUORUM_VOTERS: '1@kafka:29093'
+      KAFKA_LISTENERS: 'PLAINTEXT://kafka:29092,CONTROLLER://kafka:29093,EXTERNAL://0.0.0.0:9092'
+      KAFKA_ADVERTISED_LISTENERS: 'PLAINTEXT://kafka:29092,EXTERNAL://localhost:9092'
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: 'CONTROLLER:PLAINTEXT,PLAINTEXT:PLAINTEXT,EXTERNAL:PLAINTEXT'
+      KAFKA_CONTROLLER_LISTENER_NAMES: 'CONTROLLER'
+      KAFKA_INTER_BROKER_LISTENER_NAME: 'PLAINTEXT'
+      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+      CLUSTER_ID: 'MkU3OEVBNTcwNTJENDM2Qk'
+
+  # --- NOVO: INTERFACE VISUAL DO KAFKA ---
+  kafka-ui:
+    image: provectuslabs/kafka-ui:latest
+    container_name: pmanager-kafka-ui
+    ports:
+      - "8090:8080"
+    environment:
+      KAFKA_CLUSTERS_0_NAME: local
+      KAFKA_CLUSTERS_0_BOOTSTRAPSERVERS: kafka:29092
 
   api-service:
     build: .
@@ -34,8 +61,11 @@ services:
         condition: service_healthy
       rabbitmq:
         condition: service_started
+      kafka:
+        condition: service_started
     environment:
       - SPRING_DATASOURCE_URL=jdbc:mysql://mysql-db:3306/pmanager_db?createDatabaseIfNotExist=true
       - SPRING_DATASOURCE_USERNAME=root
       - SPRING_DATASOURCE_PASSWORD=root
       - SPRING_RABBITMQ_HOST=rabbitmq
+      - SPRING_KAFKA_BOOTSTRAP_SERVERS=kafka:29092

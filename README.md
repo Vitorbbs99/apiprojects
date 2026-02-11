@@ -18,6 +18,7 @@ Esta API é uma solução de gestão estilo Kanban focada em organizar projetos 
 - Hibernate
 - Lombok
 - RabbitMQ 3.13.7
+- Kafka
 - MailTrap
 - CI/CD
 - Docker
