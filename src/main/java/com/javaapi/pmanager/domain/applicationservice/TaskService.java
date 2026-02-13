@@ -12,6 +12,7 @@ import com.javaapi.pmanager.domain.repository.TaskRepository;
 import com.javaapi.pmanager.infrastructure.config.AppConfigProperties;
 import com.javaapi.pmanager.infrastructure.dto.SaveTaskDataDTO;
 import com.javaapi.pmanager.infrastructure.services.FileService;
+import com.javaapi.pmanager.infrastructure.services.KafkaProducerService;
 import com.javaapi.pmanager.infrastructure.util.PaginationHelper;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
@@ -35,6 +36,9 @@ public class TaskService {
     private final ProjectService projectService;
     private final UserService userService;
     private final AppConfigProperties props;
+
+    @Autowired
+    private KafkaProducerService kafkaProducerService;
 
     @Autowired
     private FileService fileService;
@@ -61,6 +65,10 @@ public class TaskService {
         taskRepository.save(task);
 
         log.info("Task created: " + task);
+
+        // CRIA A FILA NO KAFKA
+        kafkaProducerService.sendMessage("update-project-stats", saveTaskData.getProjectId());
+
         return task;
     }
 

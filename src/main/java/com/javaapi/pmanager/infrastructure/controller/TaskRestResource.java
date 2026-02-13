@@ -6,7 +6,6 @@ import com.javaapi.pmanager.domain.entity.Task;
 import com.javaapi.pmanager.infrastructure.dto.FileResponseDTO;
 import com.javaapi.pmanager.infrastructure.dto.TaskDTO;
 import com.javaapi.pmanager.infrastructure.dto.SaveTaskDataDTO;
-import com.javaapi.pmanager.infrastructure.services.KafkaProducerService;
 import com.javaapi.pmanager.infrastructure.util.SortProperties;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
@@ -35,14 +34,9 @@ public class TaskRestResource {
 
     private final TaskService taskService;
 
-    @Autowired
-    private KafkaProducerService kafkaProducerService;
-
     @PostMapping
     public ResponseEntity<TaskDTO> createTask(@RequestBody @Valid SaveTaskDataDTO saveTaskDataDTO) {
         Task task = taskService.createTask(saveTaskDataDTO);
-
-        kafkaProducerService.sendMessage("task-stats-topic", "Alguém cadastrou uma task!!!");
 
         return ResponseEntity
                 .created(URI.create(PATH_TASKS + "/" + task.getId()))
