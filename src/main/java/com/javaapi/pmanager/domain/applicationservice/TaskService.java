@@ -1,9 +1,10 @@
 package com.javaapi.pmanager.domain.applicationservice;
 
-import com.javaapi.pmanager.domain.entity.Member;
 import com.javaapi.pmanager.domain.entity.Project;
 import com.javaapi.pmanager.domain.entity.Task;
 import com.javaapi.pmanager.domain.entity.User;
+import com.javaapi.pmanager.domain.events.ProjectStatsEvent;
+import com.javaapi.pmanager.domain.model.ProjectStatsEventType;
 import com.javaapi.pmanager.domain.exception.DuplicateTaskException;
 import com.javaapi.pmanager.domain.exception.InvalidTaskStatusExcpetion;
 import com.javaapi.pmanager.domain.exception.TaskNotFoundException;
@@ -23,6 +24,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
@@ -66,8 +68,14 @@ public class TaskService {
 
         log.info("Task created: " + task);
 
-        // CRIA A FILA NO KAFKA
-        kafkaProducerService.sendMessage("update-project-stats", saveTaskData.getProjectId());
+        // CRIA O TÓPICO NO KAFKA
+        var evento = new ProjectStatsEvent(
+                project.getId(),
+                ProjectStatsEventType.TASK_CREATED,
+                LocalDateTime.now()
+        );
+
+        kafkaProducerService.sendMessage("update-project-stats", evento);
 
         return task;
     }
