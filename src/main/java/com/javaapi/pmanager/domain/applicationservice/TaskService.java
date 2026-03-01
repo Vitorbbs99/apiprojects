@@ -72,6 +72,7 @@ public class TaskService {
         var evento = new ProjectStatsEvent(
                 project.getId(),
                 ProjectStatsEventType.TASK_CREATED,
+                0,
                 LocalDateTime.now()
         );
 

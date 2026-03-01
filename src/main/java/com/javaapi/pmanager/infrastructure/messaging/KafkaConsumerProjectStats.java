@@ -2,6 +2,7 @@ package com.javaapi.pmanager.infrastructure.messaging;
 
 import com.javaapi.pmanager.domain.entity.ProjectStatistics;
 import com.javaapi.pmanager.domain.events.ProjectStatsEvent;
+import com.javaapi.pmanager.domain.model.ProjectStatsEventType;
 import com.javaapi.pmanager.domain.repository.stats.ProjectStatisticsRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.kafka.annotation.KafkaListener;
@@ -20,7 +21,11 @@ public class KafkaConsumerProjectStats {
         ProjectStatistics stats = projectStatisticsRepository.findById(projectId)
                         .orElse(new ProjectStatistics(projectId));
 
-        stats.incrementTask();
+        if (event.type() == ProjectStatsEventType.TASK_CREATED) {
+            stats.incrementTask();
+        } else {
+            stats.incrementUser(event.totalUsers());
+        }
         projectStatisticsRepository.save(stats);
 
         System.out.println("Estatísticas atualizadas para o projeto: " + projectId);

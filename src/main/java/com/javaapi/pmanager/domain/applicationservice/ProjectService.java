@@ -4,24 +4,29 @@ import com.javaapi.pmanager.domain.applicationservice.ports.ProjectPublisher;
 import com.javaapi.pmanager.domain.entity.Project;
 import com.javaapi.pmanager.domain.entity.User;
 import com.javaapi.pmanager.domain.events.ProjectCreatedEvent;
+import com.javaapi.pmanager.domain.events.ProjectStatsEvent;
 import com.javaapi.pmanager.domain.exception.DeniedUserException;
 import com.javaapi.pmanager.domain.exception.DuplicateProjectException;
 import com.javaapi.pmanager.domain.exception.InvalidProjectStatusExcpetion;
 import com.javaapi.pmanager.domain.exception.ProjectNotFoundException;
+import com.javaapi.pmanager.domain.model.ProjectStatsEventType;
 import com.javaapi.pmanager.domain.model.ProjectStatus;
 import com.javaapi.pmanager.domain.model.UserRole;
 import com.javaapi.pmanager.domain.repository.ProjectRepository;
 import com.javaapi.pmanager.infrastructure.dto.ProjectStatsDTO;
 import com.javaapi.pmanager.infrastructure.dto.SaveProjectDataDTO;
+import com.javaapi.pmanager.infrastructure.services.KafkaProducerService;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 
 import java.awt.*;
+import java.time.LocalDateTime;
 import java.util.*;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -33,6 +38,9 @@ public class ProjectService {
     private final ProjectRepository projectRepository;
     private final UserService userService;
     private final ProjectPublisher projectPublisher;
+
+    @Autowired
+    private KafkaProducerService kafkaProducerService;
 
     @Transactional
     public Project createProject(SaveProjectDataDTO saveProjectData, User currentUser) {
@@ -52,8 +60,9 @@ public class ProjectService {
                 .build();
 
         projectRepository.save(project);
-        addUsersToProject(saveProjectData.getUsersIds(), project);
+        Integer amountUsers = addUsersToProject(saveProjectData.getUsersIds(), project);
 
+        // CRIAÇÃO DE OBJETO PARA FILA NO RABBITMQ
         projectPublisher.publish(new ProjectCreatedEvent(
              project.getId(),
              project.getName(),
@@ -61,6 +70,15 @@ public class ProjectService {
                 project.getInitialDate(),
                 project.getFinalDate()
         ));
+
+        //CRIAÇÃO DE OBJETO PARA TÓPICO DE ESTATISTICAS DO PROJETO
+        var evento = new ProjectStatsEvent(
+                project.getId(),
+                ProjectStatsEventType.PROJECT_CREATED,
+                amountUsers,
+                LocalDateTime.now()
+        );
+        kafkaProducerService.sendMessage("update-project-stats", evento);
 
         log.info("Projected created: " + project);
         return project;
@@ -97,7 +115,16 @@ public class ProjectService {
         project.setFinalDate(saveProjectData.getFinalDate());
         project.setStatus(convertToProjectStatus(saveProjectData.getStatus()));
 
-        addUsersToProject(saveProjectData.getUsersIds(), project);
+        Integer amountUsers = addUsersToProject(saveProjectData.getUsersIds(), project);
+
+        var evento = new ProjectStatsEvent(
+                project.getId(),
+                ProjectStatsEventType.MEMBER_ADDED,
+                amountUsers,
+                LocalDateTime.now()
+        );
+
+        kafkaProducerService.sendMessage("update-project-stats", evento);
 
         return project;
     }
@@ -117,7 +144,7 @@ public class ProjectService {
                 .isPresent();
     }
 
-    private void addUsersToProject(Set<String> userIds, Project project) {
+    private Integer addUsersToProject(Set<String> userIds, Project project) {
         List<User> users = Optional
                 .ofNullable(userIds)
                 .orElse(Set.of())
@@ -126,6 +153,8 @@ public class ProjectService {
                 .collect(Collectors.toList());
 
         project.setUsers(users);
+
+        return (users != null) ? users.size() : 0;
     }
 
     public ProjectStatsDTO projectStats(String projectId) {

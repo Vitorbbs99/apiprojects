@@ -4,11 +4,13 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 import lombok.Data;
+import lombok.Getter;
 
 import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "project_statistics")
+@Getter
 public class ProjectStatistics {
 
     @Id
@@ -34,8 +36,8 @@ public class ProjectStatistics {
         this.lastUpdate = LocalDateTime.now();
     }
 
-    public void incrementUser() {
-        this.totalUsers++;
+    public void incrementUser(Integer amountUsers) {
+        this.totalUsers=amountUsers;
         this.lastUpdate = LocalDateTime.now();
     }
 

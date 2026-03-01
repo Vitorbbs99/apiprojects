@@ -7,5 +7,6 @@ import java.time.LocalDateTime;
 public record ProjectStatsEvent (
         String projectId,
         ProjectStatsEventType type,
+        Integer totalUsers,
         LocalDateTime timestamp
 ) {}
