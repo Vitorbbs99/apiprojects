@@ -56,3 +56,5 @@ app:
   general:
     pageSize: 3
 
+upload:
+  dir: "./src/uploads"

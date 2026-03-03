@@ -39,6 +39,7 @@ public class TaskServiceTest {
         var evento = new ProjectStatsEvent(
                 taskFake.getId(),
                 ProjectStatsEventType.TASK_CREATED,
+                0,
                 LocalDateTime.now()
         );
 
