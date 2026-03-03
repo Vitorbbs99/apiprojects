@@ -36,6 +36,11 @@ public class ProjectStatistics {
         this.lastUpdate = LocalDateTime.now();
     }
 
+    public void completeTask() {
+        this.completedTasks++;
+        this.lastUpdate = LocalDateTime.now();
+    }
+
     public void incrementUser(Integer amountUsers) {
         this.totalUsers=amountUsers;
         this.lastUpdate = LocalDateTime.now();

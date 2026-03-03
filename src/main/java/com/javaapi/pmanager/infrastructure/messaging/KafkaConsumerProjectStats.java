@@ -21,11 +21,12 @@ public class KafkaConsumerProjectStats {
         ProjectStatistics stats = projectStatisticsRepository.findById(projectId)
                         .orElse(new ProjectStatistics(projectId));
 
-        if (event.type() == ProjectStatsEventType.TASK_CREATED) {
-            stats.incrementTask();
-        } else {
-            stats.incrementUser(event.totalUsers());
-        }
+       switch (event.type()) {
+           case TASK_CREATED -> stats.incrementTask();
+           case TASK_UPDATE -> stats.completeTask();
+           case PROJECT_ACTION -> stats.incrementUser(event.totalUsers());
+       };
+
         projectStatisticsRepository.save(stats);
 
         System.out.println("Estatísticas atualizadas para o projeto: " + projectId);

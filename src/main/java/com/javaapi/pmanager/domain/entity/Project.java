@@ -2,10 +2,7 @@ package com.javaapi.pmanager.domain.entity;
 
 import com.javaapi.pmanager.domain.model.ProjectStatus;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -51,6 +48,7 @@ public class Project {
     private List<User> users;
 
     @OneToMany(mappedBy = "project", orphanRemoval = true)
+    @ToString.Exclude
     private List<Task> task;
 
 }

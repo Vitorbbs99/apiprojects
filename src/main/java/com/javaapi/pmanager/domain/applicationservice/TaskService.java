@@ -29,6 +29,8 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 
+import static com.javaapi.pmanager.domain.model.TaskStatus.FINISHED;
+
 
 @Service
 @RequiredArgsConstructor
@@ -102,14 +104,29 @@ public class TaskService {
         if (existisTaskWithName(saveTaskData.getTitle(), taskId)) {
             throw new DuplicateTaskException(saveTaskData.getTitle());
         }
+
         Task task = loadTask(taskId);
+
+        TaskStatus statusOld = task.getStatus();
+        TaskStatus statusNew = convertToTaskStatus(saveTaskData.getStatus());
 
         task.setTitle(saveTaskData.getTitle());
         task.setDescription(saveTaskData.getDescription());
         task.setNumberOfDays(saveTaskData.getNumberOfDays());
-        task.setStatus(convertToTaskStatus(saveTaskData.getStatus()));
+        task.setStatus(statusNew);
         task.setProject(project);
         task.setAssignedUser(user);
+
+        // CRIA O TÓPICO NO KAFKA
+        if (statusOld != FINISHED && statusNew == FINISHED) {
+            var evento = new ProjectStatsEvent(
+                    project.getId(),
+                    ProjectStatsEventType.TASK_UPDATE,
+                    0,
+                    LocalDateTime.now()
+            );
+            kafkaProducerService.sendMessage("update-project-stats", evento);
+        }
 
         return task;
     }

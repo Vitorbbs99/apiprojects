@@ -74,7 +74,7 @@ public class ProjectService {
         //CRIAÇÃO DE OBJETO PARA TÓPICO DE ESTATISTICAS DO PROJETO
         var evento = new ProjectStatsEvent(
                 project.getId(),
-                ProjectStatsEventType.PROJECT_CREATED,
+                ProjectStatsEventType.PROJECT_ACTION,
                 amountUsers,
                 LocalDateTime.now()
         );
@@ -119,7 +119,7 @@ public class ProjectService {
 
         var evento = new ProjectStatsEvent(
                 project.getId(),
-                ProjectStatsEventType.MEMBER_ADDED,
+                ProjectStatsEventType.PROJECT_ACTION,
                 amountUsers,
                 LocalDateTime.now()
         );

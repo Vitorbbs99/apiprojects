@@ -21,6 +21,7 @@ public class SaveTaskDataDTO {
 
     private final String status;
 
+    @NotNull(message = "Project cannot be empty")
     private final String projectId;
 
     private final String userId;
