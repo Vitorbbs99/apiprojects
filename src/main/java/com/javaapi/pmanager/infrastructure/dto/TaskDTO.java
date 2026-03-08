@@ -2,20 +2,22 @@ package com.javaapi.pmanager.infrastructure.dto;
 
 import com.javaapi.pmanager.domain.entity.Task;
 import com.javaapi.pmanager.domain.model.TaskStatus;
-import lombok.Data;
+import lombok.*;
 
 import java.util.Optional;
 
 @Data
+@NoArgsConstructor
+@AllArgsConstructor
 public class TaskDTO {
 
-    private final String id;
-    private final String title;
-    private final String description;
-    private final Integer numberOfDays;
-    private final TaskStatus status;
-    private final ProjectDTO project;
-    private final UserDTO assignedMember;
+    private String id;
+    private String title;
+    private String description;
+    private Integer numberOfDays;
+    private TaskStatus status;
+    private ProjectDTO project;
+    private UserDTO assignedMember;
 
     public static TaskDTO create(Task task) {
         return new TaskDTO(

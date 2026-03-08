@@ -12,6 +12,9 @@ import com.javaapi.pmanager.domain.model.TaskStatus;
 import com.javaapi.pmanager.domain.repository.TaskRepository;
 import com.javaapi.pmanager.infrastructure.config.AppConfigProperties;
 import com.javaapi.pmanager.infrastructure.dto.SaveTaskDataDTO;
+import com.javaapi.pmanager.infrastructure.dto.TaskDTO;
+import com.javaapi.pmanager.infrastructure.dto.TaskListDTO;
+import com.javaapi.pmanager.infrastructure.dto.TaskResponse;
 import com.javaapi.pmanager.infrastructure.services.FileService;
 import com.javaapi.pmanager.infrastructure.services.KafkaProducerService;
 import com.javaapi.pmanager.infrastructure.util.PaginationHelper;
@@ -19,6 +22,8 @@ import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
@@ -48,6 +53,7 @@ public class TaskService {
     private FileService fileService;
 
     @Transactional
+    @CacheEvict(value = "task", allEntries = true)
     public Task createTask(SaveTaskDataDTO saveTaskData) {
 
         Project project = getProjectIfPossible(saveTaskData.getProjectId());
@@ -90,12 +96,14 @@ public class TaskService {
     }
 
     @Transactional
+    @CacheEvict(value = "task", allEntries = true)
     public void deleteTask(String taskId) {
         Task task = loadTask(taskId);
         taskRepository.delete(task);
     }
 
     @Transactional
+    @CacheEvict(value = "task", allEntries = true)
     public Task updateTask(String taskId, SaveTaskDataDTO saveTaskData) {
 
         Project project = getProjectIfPossible(saveTaskData.getProjectId());
@@ -141,9 +149,8 @@ public class TaskService {
         return fileName;
     }
 
-    public Page<Task> findTasks (
-            String projectId,
-            String memberId,
+    @Cacheable(value = "task", key = "'tasks-list-' + #projectId + '-' + #page")
+    public TaskResponse findTasks (
             String statusStr,
             String partialTitle,
             Integer page,
@@ -152,12 +159,21 @@ public class TaskService {
     ) {
         Sort sort = Sort.by(Sort.Direction.DESC, "title");
 
-        return taskRepository.find(
-                projectId,
-                memberId,
+        Page<Task> taskPage = taskRepository.find(
                 Optional.ofNullable(statusStr).map(this::convertToTaskStatus).orElse(null),
                 partialTitle,
                 PaginationHelper.createPageable(page, props.getGeneral().getPageSize(), directionStr, properties)
+        );
+
+        List<TaskListDTO> dtos = taskPage.getContent().stream()
+                .map(TaskListDTO::create)
+                .toList();
+
+        return new TaskResponse(
+                dtos,
+                taskPage.getTotalElements(),
+                taskPage.getTotalPages(),
+                taskPage.getNumber()
         );
     }
 

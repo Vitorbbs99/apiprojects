@@ -1,11 +1,9 @@
 package com.javaapi.pmanager.infrastructure.controller;
 
+import com.javaapi.pmanager.infrastructure.dto.*;
 import com.javaapi.pmanager.infrastructure.services.FileService;
 import com.javaapi.pmanager.domain.applicationservice.TaskService;
 import com.javaapi.pmanager.domain.entity.Task;
-import com.javaapi.pmanager.infrastructure.dto.FileResponseDTO;
-import com.javaapi.pmanager.infrastructure.dto.TaskDTO;
-import com.javaapi.pmanager.infrastructure.dto.SaveTaskDataDTO;
 import com.javaapi.pmanager.infrastructure.util.SortProperties;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
@@ -67,29 +65,25 @@ public class TaskRestResource {
 
 
     @GetMapping
-    public ResponseEntity<List<TaskDTO>> findTasks(
-           @RequestParam(value = "projectId", required = false) String projectId,
-           @RequestParam(value = "memberId", required = false) String memberId,
+    public ResponseEntity<List<TaskListDTO>> findTasks(
            @RequestParam(value = "status", required = false)  String status,
            @RequestParam(value = "partialTitle", required = false) String partialTitle,
            @RequestParam(value = "page", required = false) Integer page,
            @RequestParam(value = "direction", required = false) String direction,
            @RequestParam(value = "sort", required = false) SortProperties properties
     ){
-       Page<Task> tasks = taskService.findTasks(
-               projectId,
-               memberId,
-               status,
-               partialTitle,
-               page,
-               direction,
-               Optional
-                       .ofNullable(properties)
-                       .map(p -> p.getSortPropertiesList())
-                       .orElse(List.of())
-               );
+        // O retorno agora é TaskResponse direto
+        TaskResponse response = taskService.findTasks(
+                status,
+                partialTitle,
+                page,
+                direction,
+                Optional.ofNullable(properties)
+                        .map(p -> p.getSortPropertiesList())
+                        .orElse(List.of())
+        );
 
-       return ResponseEntity.ok(tasks.stream().map(TaskDTO::create).toList());
+        return ResponseEntity.ok(response.content());
     }
 
     @Autowired

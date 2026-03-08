@@ -52,6 +52,9 @@ spring:
       host: localhost
       port: 27017
       database: pmanagerdb
+    redis:
+      host: localhost
+      port: 6379
 app:
   general:
     pageSize: 3

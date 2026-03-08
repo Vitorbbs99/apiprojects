@@ -51,6 +51,15 @@ services:
       KAFKA_CLUSTERS_0_NAME: local
       KAFKA_CLUSTERS_0_BOOTSTRAPSERVERS: kafka:29092
 
+  redis:
+    image: redis/redis-stack-server:latest
+    container_name: pmanager-redis
+    restart: always
+    ports:
+      - "6379:6379"
+    environment:
+      - REDIS_ARGS=--save 60 1
+
   api-service:
     build: .
     container_name: pmanager-api
@@ -63,9 +72,13 @@ services:
         condition: service_started
       kafka:
         condition: service_started
+      redis:
+        condition: service_started
     environment:
       - SPRING_DATASOURCE_URL=jdbc:mysql://mysql-db:3306/pmanager_db?createDatabaseIfNotExist=true
       - SPRING_DATASOURCE_USERNAME=root
       - SPRING_DATASOURCE_PASSWORD=root
       - SPRING_RABBITMQ_HOST=rabbitmq
       - SPRING_KAFKA_BOOTSTRAP_SERVERS=kafka:29092
+      - SPRING_DATA_REDIS_HOST=redis
+      - SPRING_DATA_REDIS_PORT=6379

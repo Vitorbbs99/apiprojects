@@ -22,8 +22,6 @@ public interface TaskRepository extends JpaRepository<Task, String> {
             SELECT t
             FROM Task t
             WHERE
-                (:projectId IS NULL OR t.project.id = :projectId) AND
-                (:memberId IS NULL OR t.assignedUser.id = :memberId) AND
                 (:status IS NULL OR t.status = :status) AND
                 (:partialTitle IS NULL OR UPPER(t.title) LIKE CONCAT('%', UPPER(:partialTitle), '%'))
             """
@@ -35,8 +33,6 @@ public interface TaskRepository extends JpaRepository<Task, String> {
             @Param("partialTitle") String partialTitle
     );*/
     Page<Task> find(
-            @Param("projectId") String projectId,
-            @Param("memberId") String memberId,
             @Param("status") TaskStatus status,
             @Param("partialTitle") String partialTitle,
             Pageable pageable

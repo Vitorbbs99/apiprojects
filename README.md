@@ -24,6 +24,7 @@ Esta API é uma solução de gestão estilo Kanban focada em organizar projetos 
 - Docker
 - JUnit
 - Mockito
+- Redis
 
 ---
 
