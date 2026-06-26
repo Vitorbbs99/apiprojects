@@ -64,7 +64,7 @@ O modelo estrutural do banco de dados relacional pode ser visualizado no diagram
 - Docker instalado na máquina
 - Docker Compose instalado na máquina
 
-### Passo 1: Configuração para Rodar Local
+### Passo 1: Configuração Inicial
 Antes de iniciar a aplicação, você precisa configurar os arquivos de propriedades do Spring.
 1. Vá até a pasta de configurações do projeto (em `src/main/resources`).
 2. Mude o nome do arquivo `application-example.yml` para `application.yml`.
