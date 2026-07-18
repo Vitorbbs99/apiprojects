@@ -6,7 +6,7 @@ Esta API é uma solução de gestão no estilo Kanban focada em organizar projet
 
 ## Arquitetura e Design de Software
 
-O projeto foi construído seguindo os princípios do **DDD (Domain-Driven Design)**. Essa abordagem foi escolhida para garantir que as regras de negócio fiquem isoladas, organizadas e fáceis de manter à medida que o sistema cresce. A estrutura divide o código em camadas claras (como Domínio, Aplicação e Infraestrutura), facilitando a comunicação entre o código e o problema real que o sistema resolve.
+O sistema foi desenvolvido utilizando uma arquitetura de Microsserviços, onde cada serviço possui sua própria responsabilidade e banco de dados isolado. Internamente, cada microsserviço adota uma Arquitetura em Camadas (Domínio, Aplicação e Infraestrutura), estruturada sob os princípios do DDD (Domain-Driven Design). Essa abordagem foi escolhida para garantir que as regras de negócio fiquem isoladas, organizadas e fáceis de manter à medida que o sistema evolui.
 
 ---
 
